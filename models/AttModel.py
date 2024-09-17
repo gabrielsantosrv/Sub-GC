@@ -29,8 +29,8 @@ def pack_wrapper(module, att_feats, att_masks):
     """
     for batch computation, pack sequences with different lenghth with explicit setting the batch size at each time step
     """
-    if att_masks is not None:
-        packed, inv_ix = sort_pack_padded_sequence(att_feats, att_masks.data.long().sum(1))
+    if att_masks is not None: 
+        packed, inv_ix = sort_pack_padded_sequence(att_feats, att_masks.detach().to(torch.int64).cpu().sum(1))
         return pad_unsort_packed_sequence(PackedSequence(module(packed[0]), packed[1]), inv_ix)
     else:
         return module(att_feats)
